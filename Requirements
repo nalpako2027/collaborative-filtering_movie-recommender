@@ -1,0 +1,8 @@
+### 🛠️ Technologies Required
+
+To reproduce this analysis, you will need the original data (the link is provided in the notebook) and the following Python environment:
+
+* **Runtime:** Python 3.10+ & Jupyter Notebook
+* **Data Manipulation:** NumPy, pandas
+* **Machine Learning:** scikit-learn
+* **Data Visualization:** matplotlib
