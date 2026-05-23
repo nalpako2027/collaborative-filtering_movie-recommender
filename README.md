@@ -18,6 +18,7 @@ This project develops a memory-based collaborative filtering recommendation syst
 
 The project uses the MovieLens dataset (Harper & Konstan, 2015) provided by GroupLens Research. The dataset contains user ratings, movie metadata, genres, and related identifiers. The analysis primarily uses user ratings and movie genres.
 (F. Maxwell Harper and Joseph A. Konstan. 2015. The MovieLens Datasets: History and Context. ACM Transactions on Interactive Intelligent Systems (TiiS) 5, 4: 19:1–19:19. https://doi.org/10.1145/2827872)
+Original data was downloaded from https://grouplens.org/datasets/movielens/32m/
 
 ## Methodology
 
