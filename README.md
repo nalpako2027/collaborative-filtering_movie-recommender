@@ -1,18 +1,20 @@
 # 🚀 Sci‑Fi Movie Recommendation System Using KNN Collaborative Filtering
 
-## Project Overview
-
-This project develops a memory-based collaborative filtering recommendation system using the MovieLens 32M dataset. The analysis focuses specifically on Sci‑Fi movie preferences to reduce sparsity and improve neighborhood similarity in K-Nearest Neighbors (KNN)-based recommendation modeling. The project demonstrates an end-to-end machine learning workflow including preprocessing, user-profile construction, hyperparameter tuning, evaluation and interpretation of the findings. 
-
 ### Objectives
 
-- **Business Case & Objective:** In the entertainment streaming industry, personalizing content delivery is critical to maximizing user retention and platform engagement. This project builds an end-to-end predictive pipeline using a $K$-Nearest Neighbors (KNN) Regression framework to accurately forecast user movie ratings, enabling data-driven, automated content recommendations.
+- **Business Case & Objective:** Streaming platforms live or die on personalization. This project builds a *KNN*-based recommendation engine that predicts user ratings for Sci-Fi movies, giving platforms a data-driven way to boost engagement and retention through targeted content delivery.
 - Build a KNN-based movie recommendation system.
 - Data engineering and manipulation.
 - Reduce sparsity by restricting the analysis on a specific genre (i.e., Sci‑Fi movie profiles).
 - Compare similarity metrics and neighborhood sizes.
 - Machine learning and validation
 - Demonstrate practical recommender-system methodology for industry-oriented analytics.
+
+
+## Project Overview
+
+This project develops a memory-based collaborative filtering recommendation system using the MovieLens 32M dataset. The analysis focuses specifically on Sci‑Fi movie preferences to reduce sparsity and improve neighborhood similarity in K-Nearest Neighbors (KNN)-based recommendation modeling. The project demonstrates an end-to-end machine learning workflow including preprocessing, user-profile construction, hyperparameter tuning, evaluation and interpretation of the findings. 
+
 
 ### Dataset
 
@@ -23,7 +25,7 @@ Original data was downloaded from https://grouplens.org/datasets/movielens/32m/
 ## Methodology
 
 - Merged ratings and movie metadata tables.
-- Deterministic sampling: Filtered Sci‑Fi movies using genre labels. To address the challenge of high data sparsity common in collaborative filtering datasets, the scope of this project was narrowed strictly to the 'Sci-Fi' genre. Including all genres introduces a vast number of unrated items per user, resulting in a sparse matrix that can degrade model performance. The method of filtering for Sci-Fi increases data density and ensure that the model trains on a concentrated pool of overlapping user preferences, thereby improving the reliability of the recommendations while optimizing computational efficiency.
+- Filtered Sci‑Fi movies using genre labels. To address the challenge of high data sparsity common in collaborative filtering datasets, the scope of this project was narrowed strictly to the 'Sci-Fi' genre. Including all genres introduces a vast number of unrated items per user, resulting in a sparse matrix that can degrade model performance. The method of filtering for Sci-Fi genre increases data density and ensure that the model trains on a concentrated pool of overlapping user preferences, thereby improving the reliability of the recommendations while optimizing computational efficiency.
 - Selected active users with sufficient rating counts.
 - Constructed a user–movie rating matrix.
 - Applied KNN regression for collaborative filtering.
@@ -39,8 +41,8 @@ Original data was downloaded from https://grouplens.org/datasets/movielens/32m/
 * **Coefficient of Determination ($R^2$ Score):** `0.1545`
 
 ### 💡 Data Science Insights & Interpretation
-1. **High Prediction Accuracy:** The **MAE of 0.62** demonstrates that, on average, the KNN model’s predictions are within roughly **0.6 stars** of the user's actual rating on a standard 1-to-5 star scale. This provides a highly reliable baseline for content serving.
-2. **Optimized Neighborhood Size:** Isolating **$k=38$** strikes the perfect bias-variance tradeoff. Smaller neighborhood sizes caused the model to overfit to localized noise, while larger values diluted the unique preferences of Sci-Fi sub-genres.
+1. **High Prediction Accuracy:** The **MAE of 0.62** demonstrates that, on average, the KNN model’s predictions are within roughly **0.6 stars** of the user's actual rating on a standard 1-to-5 star scale. The model captures a modest but real signal typical of memory-based collaborative filtering.
+2. **Optimized Neighborhood Size:** Isolating **$k=38$** strikes the best bias-variance tradeoff. Smaller neighborhood sizes caused the model to overfit to localized noise, while larger values diluted the unique preferences of Sci-Fi sub-genres.
 3. **Behavioral Complexity ($R^2$):** The $R^2$ score of 0.1545 successfully captures over 15% of the variance in highly subjective user viewing habits. In collaborative filtering and human behavioral modeling, this represents a statistically significant signal for a baseline distance-based algorithm.
 4. Sci‑Fi filtering reduced sparsity and improved neighborhood quality as evidenced by lower mean squared error (MSE).
 5. Manhattan similarity metric produced slightly better results than Cosine and Euclidean distance. This can be attributed to mean replacement of missing ratings by 3.
