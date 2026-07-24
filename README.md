@@ -1,6 +1,6 @@
 # 🚀 Sci‑Fi Movie Recommendation System Using KNN Collaborative Filtering
 
-### Objectives
+## Objectives
 
 - **Business Case & Objective:** Streaming platforms live or die on personalization. This project builds a *KNN*-based recommendation engine that predicts user ratings for Sci-Fi movies, giving platforms a data-driven way to boost engagement and retention through targeted content delivery.
 - Build a KNN-based movie recommendation system.
