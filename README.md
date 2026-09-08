@@ -1,4 +1,4 @@
-![License](https://img.shields.io/github/license/username/repo?style=for-the-badge)
+![License](https://img.shields.io/github/license/nalpako2027/collaborative-filtering_movie-recommender?style=for-the-badge)
 ![Last Commit](https://img.shields.io/github/last-commit/username/repo?style=for-the-badge)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/orhan-kaplan-phd-5a4a84212/)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
