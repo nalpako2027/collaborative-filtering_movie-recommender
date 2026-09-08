@@ -2,7 +2,6 @@
 ![Last Commit](https://img.shields.io/github/last-commit/nalpako2027/collaborative-filtering_movie-recommender?style=for-the-badge)
 ![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
 ![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
-![Interactive](https://img.shields.io/badge/Interactive-ipywidgets-9cf?style=for-the-badge)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/orhan-kaplan-phd-5a4a84212/)
 
 # 🚀 Sci‑Fi Movie Recommendation System Using KNN Collaborative Filtering
