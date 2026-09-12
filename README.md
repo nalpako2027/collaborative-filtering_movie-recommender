@@ -4,7 +4,8 @@
 ![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/orhan-kaplan-phd-5a4a84212/)
 
-# 🚀 Sci‑Fi Movie Recommendation System Using KNN Collaborative Filtering
+# 🚀 Sci‑Fi Movie Recommendation System Using KNN Collaborative Filtering 
+## (Status: 🏗️ The Project Under Construction)
 
 ## 📝 Summary
 This project develops a memory-based collaborative filtering recommendation system using the MovieLens 32M dataset. The analysis focuses specifically on Sci‑Fi movie preferences to reduce sparsity and improve neighborhood similarity in K-Nearest Neighbors (KNN)-based recommendation modeling. The project demonstrates an end-to-end machine learning workflow including preprocessing, user-profile construction, hyperparameter tuning, evaluation and interpretation of the findings. 
