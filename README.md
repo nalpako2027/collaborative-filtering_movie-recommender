@@ -5,7 +5,7 @@
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/orhan-kaplan-phd-5a4a84212/)
 
 # 🚀 Sci‑Fi Movie Recommendation System Using KNN Collaborative Filtering 
-## (Status: 🏗️ The Project Under Construction, adding a case study and SVD/NMF analysis)
+## (Status: 🏗️ The Project is being Updated, adding a case study and SVD/NMF analysis)
 
 ## 📝 Summary
 This project develops a memory-based collaborative filtering recommendation system using the MovieLens 32M dataset. The analysis focuses specifically on Sci‑Fi movie preferences to reduce sparsity and improve neighborhood similarity in K-Nearest Neighbors (KNN)-based recommendation modeling. The project demonstrates an end-to-end machine learning workflow including preprocessing, user-profile construction, hyperparameter tuning, evaluation and interpretation of the findings. 
@@ -81,7 +81,9 @@ Suggested Citation: F. Maxwell Harper and Joseph A. Konstan. 2015. The MovieLens
 - Incorporate movie metadata and tags.
 - Evaluate ranking-based recommendation metrics.
 
-## 📚 References
+## 📚 References  
+F. Maxwell Harper and Joseph A. Konstan (2015). The MovieLens Datasets: History and Context. ACM Transactions on Interactive Intelligent Systems (TiiS) 5, 4: 19:1–19:19. https://doi.org/10.1145/2827872  
+
 
 ## License
 
