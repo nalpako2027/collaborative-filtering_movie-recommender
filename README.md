@@ -87,6 +87,8 @@ Cochran, W. G. (1977). Sampling techniques (3rd Edition). John Wiley & Sons.
 Harper, F. M.  & Konstan, J. A. (2015). The MovieLens Datasets: History and Context. ACM Transactions on Interactive Intelligent Systems (TiiS) 5, 4: 19:1–19:19. https://doi.org/10.1145/2827872  
 Hastie, Tibshirani & Friedman (2017) *The Elements of Statistical Learning* (2nd ed.). Springer.   
 Koren, Y., Bell, R., & Volinsky, C. (2009). Matrix factorization techniques for recommender systems. Computer, 42(8), 30–37. https://doi.org/10.1109/MC.2009.263  
+Lee, D. D., & Seung, H. S. (2001). Algorithms for non-negative matrix factorization. Advances in Neural Information Processing Systems, 13.  
+
 Salako, J. (2026). Latent Geometry of Taste: Scalable Low-Rank Matrix Factorization for Recommender Systems. arXiv preprint [arXiv:2601.03466.](https://arxiv.org/pdf/2601.03466)
 ## License
 
