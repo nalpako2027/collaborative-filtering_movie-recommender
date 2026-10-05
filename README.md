@@ -39,8 +39,6 @@ The project uses the **MovieLens 32M** dataset (Harper & Konstan, 2015), provide
 - Active users (7+ ratings) and cold-start users (≤ 6 ratings, the 25th-percentile cutoff) were separated for staged evaluation.
 - A statistically justified reduced sample was drawn using **Cochran's formula** (1977) at 95% confidence and a 2% margin of error, then calibrated upward for practical modeling; validity checks confirmed the reduced sample preserves the rating-frequency distribution of the full population.
 
-> _📊 Suggested graph here:_ **Rating distribution histogram** — establishes the left-skew and selection bias in the outcome variable.
-
 ## 🔧 4. Methodology
 
 The pipeline runs across four notebooks, each building on the previous stage:
