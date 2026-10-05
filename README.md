@@ -140,6 +140,28 @@ Neither matrix-factorization model beats a trivial popularity baseline — popul
 The original question — *how can we predict a user's rating for a movie based on patterns in similar users and similar movies, and how does model choice affect quality, especially for users with limited history?* — resolves to a consistent finding across the project: **item-level signal (popularity, item biases) carries most of the predictable variance in this dataset, and model class matters less than whether a model can absorb that signal at all.** `KNN` needed heavy imputation to compute similarity and lost signal as a result; `SVD` recovers some of it through latent factors but only at moderate profile sizes; `NMF`'s non-negativity constraint rules out the bias-recovery that would be most useful for cold-start.
 
 
+### 🎬 Example: Personalized Recommendations with SVD
+
+To demonstrate how the matrix-factorization model translates predicted ratings
+into personalized recommendations, the following example shows the Top-5
+unrated Sci-Fi movies predicted for a sample user using the tuned SVD model.
+
+**Example user: 86087**
+
+| Rank | Recommended Movie | Predicted Rating |
+|:----:|-------------------|:----------------:|
+| 1 | *Days of Eclipse* (1988) | **4.57** |
+| 2 | *Visitor to a Museum (Posetitel muzeya)* (1989) | **4.37** |
+| 3 | *The Centrifuge Brain Project* (2012) | **4.32** |
+| 4 | *Interstellar* (2014) | **4.31** |
+| 5 | *B/W* (2015) | **4.30** |
+
+> **Interpretation:** These are not the user's existing ratings. They are
+> SVD-generated predictions for movies the user has not previously rated,
+> ranked by the model's estimated preference. The example illustrates how
+> matrix factorization converts learned user–item latent representations into
+> personalized Top-K recommendations.
+
 
 ## ⚙️ 7. Requirements
 
