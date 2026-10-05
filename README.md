@@ -296,7 +296,7 @@ Surprise documentation. *SVD* and *NMF* predictors. [https://surpriselib.com/](h
 
 
 ## License
-
+![License](https://img.shields.io/github/license/nalpako2027/collaborative-filtering_movie-recommender?style=for-the-badge)
 
 
 ## 👤 Author / Attribution
