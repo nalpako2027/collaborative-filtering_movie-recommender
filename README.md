@@ -51,7 +51,7 @@ The pipeline runs across four notebooks, each building on the previous stage:
 4. **Model-based modeling (`SVD`, `NMF`).** Both models were fit with `surprise`, using a three-way 60/20/20 split over ratings. A **bias-only baseline** ($\mu + b_u + b_i$) established the floor that latent-factor models must beat. An exhaustive grid search tuned $n_\text{factors}$, regularization, learning rate, and epochs; the final factor count was chosen for generalization gap rather than raw validation minimum. Ranking quality was evaluated with `precision@k` and `recall@k` against a popularity baseline.
 5. **Cold-start evaluation.** One random rating per cold-start user was held out as the evaluation target; remaining ratings formed the user's profile. Models were trained on active-user data combined with all profiles, and evaluated by profile size (1–5 ratings) with paired bootstrap confidence intervals against the bias-only baseline.
 
-![Before vs. after user-mean centering and imputation](figures/mov_rec1.png)
+![Before/after user-mean centering and imputation on the user–movie matrix](figures/mov_rec1.png)
 
 
 ## 📊 5. Key Findings & Model Performance
@@ -93,9 +93,9 @@ Cold-start results are reported by **profile size** (number of ratings available
 
 In plain terms: on this dataset, **item-level signal — popularity and item biases — carries most of the predictable variance**, and model class matters less than whether a model can absorb that signal at all. `SVD` is the strongest rating-prediction model among those tested, beating both the bias-only baseline and `NMF` on every metric, but its advantage over the baseline is modest and only emerges once a user has accumulated a few ratings. For ranking, no model tested beats simple popularity. For cold-start users specifically, a popularity-based or bias-only recommender is a reasonable default until a profile of roughly three ratings accumulates.
 
-> _📊 Suggested graph here:_ **CV RMSE vs. $n_\text{factors}$ (SVD vs. NMF)** — the model-comparison headline, showing `SVD` consistently outperforming `NMF` at matched factor counts.
->
-> _📊 Suggested graph here:_ **Cold-start RMSE by profile size (3-panel)** — the Part 4 headline, showing `SVD`'s crossing point and `NMF`'s persistent gap against the bias-only baseline.
+![CV RMSE vs. latent factors for SVD and NMF](figures/cv_rmse_vs_nfactors.png)
+
+![Cold-start RMSE by profile size for SVD, NMF, and baselines](figures/coldstart_rmse_by_profile.png)
 
 
 
