@@ -45,28 +45,29 @@ The pipeline runs across four notebooks, each building on the previous stage:
 
 1. **Data preparation.** Ratings were merged with movie metadata (inner join, validated many-to-one), filtered to the Sci-Fi genre, and split into active and cold-start user groups. A Cochran-adjusted random sample was drawn for iterative development, with a distribution check confirming representativeness against the full population.
 2. **Feature engineering.** A user–movie rating matrix was constructed and **user-mean centered** to remove individual rater bias. For the `KNN` pipeline only, missing ratings were imputed with each user's centered mean (0), a necessary step for distance-based similarity but one that manufactures unobserved signal; the before/after sparsity diagnostic makes this tradeoff explicit. `SVD` and `NMF` bypass imputation entirely by training on observed ratings only.
-3. **Memory-based modeling (`KNN`).** A `KNeighborsRegressor` with inverse-distance weighting was tuned over neighborhood size $k$, distance metric (Euclidean, Cosine, Manhattan), and evaluated with a 60/20/20 train–validation–test split. A genre-granularity case study used Exploratory Factor Analysis on Sci-Fi sub-genre co-occurrence to test whether restricting similarity computation to a latent genre factor (Action/Adventure) improves neighbor quality.
-4. **Model-based modeling (`SVD`, `NMF`).** Both models were fit with `surprise`, using a three-way 60/20/20 split over ratings. A **bias-only baseline** ($\mu + b_u + b_i$) established the floor that latent-factor models must beat. An exhaustive grid search tuned $n_\text{factors}$, regularization, learning rate, and epochs; the final factor count was chosen for generalization gap rather than raw validation minimum. Ranking quality was evaluated with `precision@k` and `recall@k` against a popularity baseline.
-5. **Cold-start evaluation.** One random rating per cold-start user was held out as the evaluation target; remaining ratings formed the user's profile. Models were trained on active-user data combined with all profiles, and evaluated by profile size (1–5 ratings) with paired bootstrap confidence intervals against the bias-only baseline.
+3. **Memory-based modeling (`KNN`).** A `KNeighborsRegressor` with inverse-distance weighting was tuned over neighborhood size $k$, distance metric (Euclidean, Cosine, Manhattan), tuned over neighborhood size $k$ (Manhattan distance), then compared across distance metrics (Euclidean, Cosine, Manhattan) at the selected $k$. It was evaluated with an 80/20 train–test split over users, scoring one target movie per user; because $k$ was selected on the same test split, the reported error is likely slightly optimistic.. A genre-granularity case study used Exploratory Factor Analysis on Sci-Fi sub-genre co-occurrence to test whether restricting similarity computation to a latent genre factor (Action/Adventure) improves neighbor quality.
+5. **Model-based modeling (`SVD`, `NMF`).** Both models were fit with `surprise`, using a three-way 60/20/20 split over ratings. A **bias-only baseline** ($\mu + b_u + b_i$) established the floor that latent-factor models must beat. An exhaustive grid search tuned $n_\text{factors}$, regularization, learning rate, and epochs; the final factor count was chosen for generalization gap rather than raw validation minimum. Ranking quality was evaluated with `precision@k` and `recall@k` against a popularity baseline.
+6. **Cold-start evaluation.** One random rating per cold-start user was held out as the evaluation target; remaining ratings formed the user's profile. Models were trained on active-user data combined with all profiles, and evaluated by profile size (1–5 ratings) with paired bootstrap confidence intervals against the bias-only baseline.
 
 ![Before/after user-mean centering and imputation on the user–movie matrix](figures/mov_rec1.png)
 
 
 ## 📊 5. Key Findings & Model Performance
 
-Model performance is reported in two stages: first on **active users** (7+ ratings), then on **cold-start users** (≤ 6 ratings). All metrics below are from the final held-out test set, except where noted.
+Model performance is reported in two stages: first on **active users** (7+ ratings), then on **cold-start users** (≤ 6 ratings). Unless the *Eval set* column says otherwise, metrics are from the final held-out test set.
 
 ### Active Users
 
-| Model | RMSE | MAE | Notes |
-|---|---|---|---|
-| Bias-only baseline ($\mu + b_u + b_i$) | 0.871 | 0.669 | Floor for latent-factor comparison |
-| `KNN` (uncentered, k=38) | 0.816 | 0.627 | Superseded — see note below |
-| `KNN` (centered, k=14, Manhattan) | 0.889 | — | R² = −0.14; centering removed the rating-level shortcut |
-| `SVD` ($n_\text{factors}=20$) | 0.813 | 0.615 | Best rating-accuracy model |
-| `NMF` ($n_\text{factors}=10$) | 0.843 | 0.649 | Weaker than `SVD` across all metrics |
+| Model | Eval set | RMSE | MAE | Notes |
+|---|---|---|---|---|
+| Bias-only baseline ($\mu + b_u + b_i$) | Validation | 0.871 | 0.669 | Floor for latent-factor comparison; not rescored on the test set |
+| `SVD` ($n_\text{factors}=20$) | Validation | 0.820 | — | Same-set partner for the baseline: ~6% lower RMSE |
+| `SVD` ($n_\text{factors}=20$) | Test | 0.813 | 0.615 | Best rating-accuracy model; refit on train + validation |
+| `NMF` ($n_\text{factors}=10$) | Test | 0.843 | 0.649 | Weaker than `SVD` across all metrics; refit on train + validation |
+| `KNN` (centered, k=14, Manhattan) | Test (different protocol) | 0.931 | 0.759 | R² = −0.14; one target movie per user, so not directly comparable to the rows above |
 
-**Note on the KNN comparison.** The uncentered `KNN` numbers (RMSE 0.816, MAE 0.627) were inflated by implicit rating-level matching: imputed cells dominated by each user's own mean allowed the model to predict toward a user's typical rating rather than genuine shared taste. Once ratings were centered to remove that shortcut, `KNN` MSE rose from ~0.73 to ~0.89 and R² fell to −0.14, worse than a naive per-user-average baseline. The centered result is the methodologically honest one; the uncentered numbers are reported only to document the effect.
+**Note:** All SVD/NMF/baseline rows are scored on the same held-out test set (112,104 ratings), with models refit on train + validation.  
+**Note on the KNN comparison.** `KNN` was evaluated under a different protocol from `SVD`/`NMF`: an 80/20 train–test split over 8,724 users (6,979 / 1,745), scoring one target movie per user, versus 112,104 test ratings for the matrix-factorization models. Its error is shown for reference, not as a like-for-like ranking. Because k was selected on the same test split that is reported, the `KNN` error is likely slightly optimistic. Centering ratings by user mean removed an implicit rating-level shortcut: in the earlier uncentered run, imputed cells dominated by each user's own mean let the model predict toward a user's typical rating rather than shared taste, and `KNN` MSE rose from roughly 0.73 to roughly 0.89 after centering. An R² of −0.14 on the centered scale means it did worse than predicting each user's own average. The centered result is the more defensible one, but it is tentative: in the same notebook, Cosine distance gave lower error (RMSE 0.828, MAE 0.632) than the Manhattan configuration reported here, and k was tuned for Manhattan only.
 
 ### Ranking Quality (Active Users)
 
@@ -83,13 +84,13 @@ On top-10 ranking, neither matrix-factorization model beats a trivial popularity
 Cold-start results are reported by **profile size** (number of ratings available after one is held out as the evaluation target), with paired bootstrap confidence intervals against the bias-only baseline.
 
 - **The profile itself is the dominant signal.** The strict baseline ($\mu + b_i$, no profile) is worse than the bias-only baseline at every profile size, with the gap widening from 0.030 MSE at profile size 1 to 0.120 at size 5. Having *any* profile beats having none.
-- **`SVD` crosses the baseline between profile sizes 2 and 3.** Its paired MSE difference moves from +0.080 at size 1 to −0.082 at size 5, but no per-size 95% bootstrap CI excludes zero — a directional trend, not a confirmed threshold at this sample size.
-- **`NMF` never beats the baseline.** Its paired MSE difference is significantly positive at profile sizes 1–3 (95% CI excludes zero) and remains positive at sizes 4–5. The most plausible explanation is that `biased=False` leaves `NMF`'s user factors poorly determined under small profiles; this was not tested directly.
+- **`SVD` overtakes the baseline in point estimate between profile sizes 2 and 3, but is statistically distinguishable only at size 5.** Its paired MSE difference moves from +0.080 at size 1 to −0.082 at size 5. The 95% bootstrap CI excludes zero only at size 5 ([−0.173, −0.002]), a borderline result: the upper bound is barely below zero, and no correction was made for testing five profile sizes. At sizes 1–4 the CIs include zero, so a crossing at about three ratings is a directional trend, not a confirmed threshold.
+- **`NMF` never beats the baseline.** Its paired MSE difference is significantly positive at profile sizes 1 and 2 (95% CI excludes zero), borderline at size 3 (CI [−0.001, 0.186]), and positive but indistinguishable from zero at sizes 4–5. One possible explanation is that `biased=False` leaves `NMF`'s user factors poorly determined under small profiles; this was not tested.  
 - **For users with no profile, the item bias alone helps.** Among 635 profile-0 users, replacing $\mu$ with $\mu + b_i$ reduces RMSE from 1.198 to 1.144 (paired MSE difference −0.125, 95% CI [−0.215, −0.036]).
 
 ### Headline Interpretation
 
-In plain terms: on this dataset, **item-level signal — popularity and item biases — carries most of the predictable variance**, and model class matters less than whether a model can absorb that signal at all. `SVD` is the strongest rating-prediction model among those tested, beating both the bias-only baseline and `NMF` on every metric, but its advantage over the baseline is modest and only emerges once a user has accumulated a few ratings. For ranking, no model tested beats simple popularity. For cold-start users specifically, a popularity-based or bias-only recommender is a reasonable default until a profile of roughly three ratings accumulates.
+In plain terms: on this dataset, **item-level signal — popularity and item biases — carries most of the predictable variance**, and model class matters less than whether a model can absorb that signal at all. `SVD` is the strongest rating-prediction model among those tested, beating both the bias-only baseline and `NMF` on every metric, but its advantage over the baseline is modest and only emerges once a user has accumulated a few ratings. For ranking, no model tested beats simple popularity. For cold-start users specifically, a popularity-based or bias-only recommender is a reasonable default until a profile of roughly three to five ratings accumulates (the evidence for switching is strongest at five).
 
 ![CV RMSE vs. latent factors for SVD and NMF](figures/cv_rmse_vs_nfactors.png)
 
@@ -101,7 +102,7 @@ In plain terms: on this dataset, **item-level signal — popularity and item bia
 
 ### 1. Does the choice of algorithm materially change recommendation quality, and is the difference worth the added complexity in production?
 
-**Partly — and only for rating prediction.** `SVD` (RMSE 0.813) beats `NMF` (0.843) and the bias-only baseline (0.871) on held-out rating accuracy, but the margin over the baseline is modest (~7% RMSE reduction). The `KNN` baseline, once centered to remove a rating-level shortcut, performed *worse* than the bias-only baseline (R² = −0.14), showing that memory-based similarity over a heavily imputed matrix does not isolate genuine shared-taste signal in this dataset.
+**Partly — and only for rating prediction.** On the validation set, `SVD` reduces RMSE by about 6% relative to the bias-only baseline (0.820 vs. 0.871); held-out test results for `SVD` (0.813) and `NMF` (0.843) are consistent with this. The margin is modest. The centered `KNN` model (different evaluation protocol; see the note above) had R² = −0.14, worse than predicting each user's own average, which suggests that similarity over a heavily imputed matrix captures little shared-taste signal. That conclusion is tentative, since Cosine distance scored lower error than the Manhattan configuration reported.
 
 **Practical implication:** For a production recommender on sparse, Sci-Fi-filtered data, latent-factor models are worth the added complexity — but only modestly, and only if the system can absorb user/item bias terms. A bias-only model is a strong, cheap default.
 
@@ -124,10 +125,10 @@ Neither matrix-factorization model beats a trivial popularity baseline — popul
 **The profile, not the model, is the primary source of improvement.** Across profile sizes 1–5:
 
 - The strict baseline ($\mu + b_i$, no profile) is worse than the bias-only baseline at every size, with a widening gap (0.030 → 0.120 MSE). Any profile beats no profile.
-- `SVD`'s paired MSE difference against the baseline crosses zero between profile sizes 2 and 3, reaching −0.082 at size 5 — a directional trend, but no per-size bootstrap CI excludes zero.
-- `NMF` never beats the baseline; it is *significantly worse* at profile sizes 1–3.
+- `SVD`'s paired MSE difference against the baseline crosses zero between profile sizes 2 and 3 and reaches −0.082 at size 5. Only the size-5 CI excludes zero ([−0.173, −0.002], borderline); at sizes 1–4 the difference is a directional trend.
+- `NMF` never beats the baseline; it is significantly worse at profile sizes 1–2 and borderline at size 3.
 
-**Practical implication:** A hybrid recommender — popularity or bias-only for users with ≤ 2 ratings, shifting to `SVD` once a profile of ~3 ratings accumulates — is the defensible design. `NMF` should not be used for cold-start segments under this configuration.
+**Practical implication:** A bias-only (or popularity) recommender is the safe default for the smallest profiles. `SVD`'s advantage is statistically distinguishable only at five ratings, so any switch point between three and five ratings is a hypothesis to confirm with more data, not a validated threshold. `NMF` should not be used for cold-start segments under this configuration.
 
 ### 4. Is "Sci-Fi" a good enough taste unit for similarity-based recommendation?
 
@@ -137,7 +138,7 @@ Neither matrix-factorization model beats a trivial popularity baseline — popul
 
 ### 5. What does this mean for the original research question?
 
-The original question — *how can we predict a user's rating for a movie based on patterns in similar users and similar movies, and how does model choice affect quality, especially for users with limited history?* — resolves to a consistent finding across the project: **item-level signal (popularity, item biases) carries most of the predictable variance in this dataset, and model class matters less than whether a model can absorb that signal at all.** `KNN` needed heavy imputation to compute similarity and lost signal as a result; `SVD` recovers some of it through latent factors but only at moderate profile sizes; `NMF`'s non-negativity constraint rules out the bias-recovery that would be most useful for cold-start.
+The original question — *how can we predict a user's rating for a movie based on patterns in similar users and similar movies, and how does model choice affect quality, especially for users with limited history?* — resolves to a consistent finding across the project: **item-level signal (popularity, item biases) carries most of the predictable variance in this dataset, and model class matters less than whether a model can absorb that signal at all.** `KNN` needed heavy imputation to compute similarity and lost signal as a result; `SVD` recovers some of it through latent factors but only at moderate profile sizes; `NMF`(fit without bias terms) did not recover that signal under small profiles; whether this reflects its non-negativity constraint or the biased=False setting was not tested.
 
 
 ### 🎬 Example: Personalized Recommendations with SVD
