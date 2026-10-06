@@ -1,4 +1,4 @@
-## 🧾 Executive Summary
+## 🧾 Executive Summary: Sci‑Fi Movie Recommendation for Cold-Start Users
 
 **Question.** Does the choice of collaborative-filtering algorithm materially change recommendation quality for Sci‑Fi movies, and does any of that quality survive for cold-start users (≤ 6 ratings)?
 
