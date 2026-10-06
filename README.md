@@ -246,18 +246,19 @@ Each notebook reads the `.parquet` outputs written by the previous one. Running 
 ```
 collaborative-filtering_movie-recommender/
 │
+├── figures/                                # Figures referenced in this README
+│   ├── mov_rec1.png                        # Before/after centering & imputation heatmap
+│   ├── cv_rmse_vs_nfactors.png             # CV RMSE vs. latent factors (SVD, NMF)
+│   └── coldstart_rmse_by_profile.png       # Cold-start RMSE by profile size
+│
 ├── notebooks/
 │   ├── 01_data_prep.ipynb                  # Download, merge, Sci-Fi filter, Cochran sample, active/cold-start split
 │   ├── 02_knn_modeling.ipynb               # KNN baseline, hyperparameter tuning, genre-granularity case study
 │   ├── 03_svd_nmf_modeling.ipynb           # SVD / NMF tuning, ranking evaluation (precision@k, recall@k)
 │   └── 04_cold-start_and_conclusion.ipynb  # Cold-start evaluation by profile size with bootstrap CIs; conclusions
 │
-├── figures/                                # Figures referenced in this README
-│   ├── mov_rec1.png                        # Before/after centering & imputation heatmap
-│   ├── cv_rmse_vs_nfactors.png             # CV RMSE vs. latent factors (SVD, NMF)
-│   └── coldstart_rmse_by_profile.png       # Cold-start RMSE by profile size
-│
 ├── .gitignore
+├── EXECUTIVE_SUMMARY.md
 ├── LICENSE
 └── README.md
 ```
