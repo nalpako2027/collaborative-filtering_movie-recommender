@@ -264,7 +264,8 @@ collaborative-filtering_movie-recommender/
 ├── .gitignore
 ├── EXECUTIVE_SUMMARY.md
 ├── LICENSE
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 
 **Notes**
