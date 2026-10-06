@@ -46,7 +46,7 @@ The pipeline runs across four notebooks, each building on the previous stage:
 
 1. **Data preparation.** Ratings were merged with movie metadata (inner join, validated many-to-one), filtered to the Sci-Fi genre, and split into active and cold-start user groups. A Cochran-adjusted random sample was drawn for iterative development, with a distribution check confirming representativeness against the full population.
 2. **Feature engineering.** A user–movie rating matrix was constructed and **user-mean centered** to remove individual rater bias. For the `KNN` pipeline only, missing ratings were imputed with each user's centered mean (0), a necessary step for distance-based similarity but one that manufactures unobserved signal; the before/after sparsity diagnostic makes this tradeoff explicit. `SVD` and `NMF` bypass imputation entirely by training on observed ratings only.
-3. **Memory-based modeling (`KNN`).** A `KNeighborsRegressor` with inverse-distance weighting was tuned over neighborhood size $k$, distance metric (Euclidean, Cosine, Manhattan), tuned over neighborhood size $k$ (Manhattan distance), then compared across distance metrics (Euclidean, Cosine, Manhattan) at the selected $k$. It was evaluated with an 80/20 train–test split over users, scoring one target movie per user; because $k$ was selected on the same test split, the reported error is likely slightly optimistic.. A genre-granularity case study used Exploratory Factor Analysis on Sci-Fi sub-genre co-occurrence to test whether restricting similarity computation to a latent genre factor (Action/Adventure) improves neighbor quality.
+3. **Memory-based modeling (`KNN`).** A `KNeighborsRegressor` with inverse-distance weighting was tuned over neighborhood size $k$ (Manhattan distance), then compared across distance metrics (Euclidean, Cosine, Manhattan) at the selected $k$. It was evaluated with an 80/20 train–test split over users, scoring one target movie per user; because $k$ was selected on the same test split, the reported error is likely slightly optimistic. A genre-granularity case study used Exploratory Factor Analysis on Sci-Fi sub-genre co-occurrence to test whether restricting similarity computation to a latent genre factor (Action/Adventure) improves neighbor quality.  
 5. **Model-based modeling (`SVD`, `NMF`).** Both models were fit with `surprise`, using a three-way 60/20/20 split over ratings. A **bias-only baseline** ($\mu + b_u + b_i$) established the floor that latent-factor models must beat. An exhaustive grid search tuned $n_\text{factors}$, regularization, learning rate, and epochs; the final factor count was chosen for generalization gap rather than raw validation minimum. Ranking quality was evaluated with `precision@k` and `recall@k` against a popularity baseline.
 6. **Cold-start evaluation.** One random rating per cold-start user was held out as the evaluation target; remaining ratings formed the user's profile. Models were trained on active-user data combined with all profiles, and evaluated by profile size (1–5 ratings) with paired bootstrap confidence intervals against the bias-only baseline.
 
@@ -67,7 +67,7 @@ Model performance is reported in two stages: first on **active users** (7+ ratin
 | `NMF` ($n_\text{factors}=10$) | Test | 0.843 | 0.649 | Weaker than `SVD` across all metrics; refit on train + validation |
 | `KNN` (centered, k=14, Manhattan) | Test (different protocol) | 0.931 | 0.759 | R² = −0.14; one target movie per user, so not directly comparable to the rows above |
 
-**Note:** All SVD/NMF/baseline rows are scored on the same held-out test set (112,104 ratings), with models refit on train + validation.  
+**Note:** The `SVD` and `NMF` test rows use the same held-out test set (112,104 ratings), with models refit on train + validation. The baseline and `SVD` validation rows use the 112,104-rating validation set, so they are comparable to each other.   
 **Note on the KNN comparison.** `KNN` was evaluated under a different protocol from `SVD`/`NMF`: an 80/20 train–test split over 8,724 users (6,979 / 1,745), scoring one target movie per user, versus 112,104 test ratings for the matrix-factorization models. Its error is shown for reference, not as a like-for-like ranking. Because k was selected on the same test split that is reported, the `KNN` error is likely slightly optimistic. Centering ratings by user mean removed an implicit rating-level shortcut: in the earlier uncentered run, imputed cells dominated by each user's own mean let the model predict toward a user's typical rating rather than shared taste, and `KNN` MSE rose from roughly 0.73 to roughly 0.89 after centering. An R² of −0.14 on the centered scale means it did worse than predicting each user's own average. The centered result is the more defensible one, but it is tentative: in the same notebook, Cosine distance gave lower error (RMSE 0.828, MAE 0.632) than the Manhattan configuration reported here, and k was tuned for Manhattan only.
 
 ### Ranking Quality (Active Users)
@@ -182,7 +182,7 @@ unrated Sci-Fi movies predicted for a sample user using the tuned SVD model.
 | factor-analyzer | ≥ 0.5 |
 | wordcloud | ≥ 1.9 |
 | pyarrow | ≥ 14.0 |
-| Jupyter Notebook / JupyterLab | ≥ 7.0 |
+| Jupyter Notebook / JupyterLab | ≥4.0 / ≥ 7.0 |
 
 **Installation**
 
@@ -197,6 +197,7 @@ pip install -r requirements.txt
 ```bash
 git clone https://github.com/nalpako2027/collaborative-filtering_movie-recommender.git
 cd collaborative-filtering_movie-recommender
+cd notebooks # launch Jupyter from here; the notebooks use relative paths such as ml-32m/
 ```
 
 ### 2. Install dependencies
@@ -223,7 +224,7 @@ The notebooks download **MovieLens 32M** automatically on first run:
 | 1 | `01_data_prep.ipynb` | Download, merge, Sci-Fi filter, Cochran sample, active/cold-start split |
 | 2 | `02_knn_modeling.ipynb` | `KNN` baseline, hyperparameter tuning, genre-granularity case study |
 | 3 | `03_svd_nmf_modeling.ipynb` | `SVD` / `NMF` tuning, ranking evaluation (`precision@k`, `recall@k`) |
-| 4 | `04_cold_start.ipynb` | Cold-start evaluation by profile size with bootstrap CIs |
+| 4 | `04_cold-start_and_conclusion.ipynb` | Cold-start evaluation by profile size with bootstrap CIs |
 
 Each notebook reads the `.parquet` outputs written by the previous one. Running them out of order will fail on missing files.
 
