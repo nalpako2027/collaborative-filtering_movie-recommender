@@ -78,7 +78,7 @@ Model performance is reported in two stages: first on **active users** (7+ ratin
 | `NMF` | 0.028 | 0.067 |
 | Popularity baseline | **0.136** | **0.288** |
 
-On top-10 ranking, neither matrix-factorization model beats a trivial popularity baseline — popularity is roughly 4–5× better on precision and 4× better on recall. A multi-$k$ sweep confirmed the pattern: precision stays flat as $k$ grows (0.027 → 0.016 from $k=10$ to $k=200$), the signature of a ranking that carries little signal beyond base rates.
+On top-10 ranking, neither matrix-factorization model beats a trivial popularity baseline — popularity is roughly 4–5× better on precision and 4× better on recall. In the validation-set sweep, precision declines gradually as $k$ grows (0.027 → 0.016 from $k=10$ to $k=200$), so the rankings carry some signal, but far less than popularity does.
 
 ### Cold-Start Users
 
@@ -117,7 +117,7 @@ In plain terms: on this dataset, **item-level signal — popularity and item bia
 | `NMF` | 0.028 | 0.067 |
 | Popularity | **0.136** | **0.288** |
 
-Neither matrix-factorization model beats a trivial popularity baseline — popularity is 4–5× better on precision and ~4× better on recall. A multi-$k$ sweep confirmed this is not a threshold artifact: precision stays flat as $k$ grows, meaning items ranked 10–200 are roughly as likely to be relevant as items ranked 1–10. The models' rankings carry little personalized signal beyond what item bias already captures.
+Neither matrix-factorization model beats a trivial popularity baseline — popularity is 4–5× better on precision and ~4× better on recall. A multi-$k$ sweep shows precision declining only gradually as $k$ grows (0.027 → 0.016 from $k=10$ to $k=200`). Items ranked 11–200 are somewhat less likely to be relevant than the top 10 (about 0.015 vs. 0.027), so the models do carry some personalized signal, but far less than popularity does.
 
 **Practical implication:** In cold or sparse settings, "most-rated" is a stronger top-k strategy than either latent-factor model. Ranking metrics, not RMSE, should drive the go/no-go decision for a personalized ranker.
 
