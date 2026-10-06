@@ -6,6 +6,7 @@
 
 # 🚀 Sci‑Fi Movie Recommendation for Cold-Start Users: A Comparison of KNN, SVD, and NMF 
 
+📄 [Executive Summary](EXECUTIVE_SUMMARY.md)
 
 ## 📝 1. Summary
 
