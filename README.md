@@ -246,23 +246,27 @@ Each notebook reads the `.parquet` outputs written by the previous one. Running 
 ```
 collaborative-filtering_movie-recommender/
 │
-├── 01_data_prep.ipynb              # Download, merge, Sci-Fi filter, Cochran sample, active/cold-start split
-├── 02_knn_modeling.ipynb           # KNN baseline, hyperparameter tuning, genre-granularity case study
-├── 03_svd_nmf_modeling.ipynb       # SVD / NMF tuning, ranking evaluation (precision@k, recall@k)
-├── 04_cold_start.ipynb             # Cold-start evaluation by profile size with bootstrap CIs
+├── notebooks/
+│   ├── 01_data_prep.ipynb                  # Download, merge, Sci-Fi filter, Cochran sample, active/cold-start split
+│   ├── 02_knn_modeling.ipynb               # KNN baseline, hyperparameter tuning, genre-granularity case study
+│   ├── 03_svd_nmf_modeling.ipynb           # SVD / NMF tuning, ranking evaluation (precision@k, recall@k)
+│   └── 04_cold-start_and_conclusion.ipynb  # Cold-start evaluation by profile size with bootstrap CIs; conclusions
 │
-├── figures/                        # Figures referenced in this README
-│   └── mov_rec1.png                # Before/after centering & imputation heatmap
+├── figures/                                # Figures referenced in this README
+│   ├── mov_rec1.png                        # Before/after centering & imputation heatmap
+│   ├── cv_rmse_vs_nfactors.png             # CV RMSE vs. latent factors (SVD, NMF)
+│   └── coldstart_rmse_by_profile.png       # Cold-start RMSE by profile size
 │
-├── ml-32m/                         # Data directory (created at runtime; not committed)
-│   ├── df_scifi_movies_reduced.parquet   # Cochran-sampled Sci-Fi ratings
-│   ├── df_active.parquet                 # Active-user subset (7+ ratings)
-│   └── df_cold_start.parquet             # Cold-start subset (≤ 6 ratings)
-│
-├── requirements.txt                # Python dependencies
+├── .gitignore
 ├── LICENSE
 └── README.md
 ```
+
+**Notes**
+
+- The MovieLens 32M data is not included in the repository. `01_data_prep.ipynb` downloads it and writes the intermediate `.parquet` files next to the notebooks (in `ml-32m/`); each later notebook reads them.
+- Run the notebooks in order; running them out of order will fail on missing files.
+- Only figures used in this README are stored in `figures/`; the full set of plots is rendered inline in the notebooks.
 
 **Notes**
 
