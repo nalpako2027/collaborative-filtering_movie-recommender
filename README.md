@@ -230,9 +230,11 @@ Each notebook reads the `.parquet` outputs written by the previous one. Running 
 
 ### 5. Expected outputs
 
-- `ml-32m/df_scifi_movies_reduced.parquet` — Cochran-sampled Sci-Fi ratings
-- `ml-32m/df_active.parquet` — active-user subset (7+ ratings)
-- `ml-32m/df_cold_start.parquet` — cold-start subset (≤ 6 ratings)
+Running the notebooks creates the following files inside `notebooks/` (they are generated locally and not committed to the repository):
+
+- `notebooks/ml-32m/df_scifi_movies_reduced.parquet` — Cochran-sampled Sci-Fi ratings
+- `notebooks/ml-32m/df_active.parquet` — active-user subset (7+ ratings)
+- `notebooks/ml-32m/df_cold_start.parquet` — cold-start subset (≤ 6 ratings)
 - Figures rendered inline in each notebook; selected figures are referenced from this README.
 
 ### 6. Reproducibility notes
